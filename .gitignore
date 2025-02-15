@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 venv/
 .env/
+virt/
 *.pyc
 __pycache__/
 *.py[cod]
