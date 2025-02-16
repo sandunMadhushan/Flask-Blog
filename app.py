@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash
+from flask import Flask, render_template, flash, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
@@ -95,3 +95,24 @@ def name():
         flash('Form submitted successfully')
         
     return render_template('name.html', name=name, form=form)
+
+# Update database record
+@app.route('/update/<int:id>', methods=['GET', 'POST'])
+
+def update(id):
+    user_to_update = Users.query.get_or_404(id)
+    form = UserForm()
+    user_to_update = Users.query.get_or_404(user_to_update.id)
+    if request.method == 'POST':
+        user_to_update.name = request.form['name']
+        user_to_update.email = request.form['email']
+        try:
+            db.session.commit()
+            flash('User updated successfully')
+            return render_template('update.html', form=form, user_to_update=user_to_update)
+        except:
+            flash('There was an issue updating your user')
+            return render_template('update.html', form=form, user_to_update=user_to_update)
+    else:
+        return render_template('update.html', form=form, user_to_update=user_to_update)
+    
